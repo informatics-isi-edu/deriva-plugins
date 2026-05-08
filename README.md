@@ -2,27 +2,34 @@
 
 [Claude Code](https://claude.ai/claude-code) plugin marketplace for the [Deriva](https://github.com/informatics-isi-edu/deriva-py) ecosystem. Adds two plugins from a single marketplace add:
 
-| Plugin | Tier | Purpose |
-|--------|------|---------|
-| [`deriva`](https://github.com/informatics-isi-edu/deriva-skills) | 1 — core | Schema operations, vocabulary management, query patterns, Chaise display customization, generic catalog troubleshooting. Works on any Deriva catalog. |
-| [`deriva-ml`](https://github.com/informatics-isi-edu/deriva-ml-skills) | 2 — DerivaML | Dataset / execution / experiment lifecycles, features, asset management, Hydra-zen configs, model development. Depends on the `deriva` plugin and the `deriva-ml-mcp` MCP plugin. |
+| Plugin | Purpose |
+|--------|---------|
+| [`deriva`](https://github.com/informatics-isi-edu/deriva-skills) | Generic Deriva catalog operations: schema, vocabulary management, query patterns, Chaise display customization, generic catalog troubleshooting. Works on any Deriva catalog. |
+| [`deriva-ml`](https://github.com/informatics-isi-edu/deriva-ml-skills) | DerivaML domain layer: dataset / execution / experiment lifecycles, features, asset management, Hydra-zen configs, model development. Builds on the `deriva` plugin and requires a `deriva-ml-mcp`-equipped MCP server. |
+
+## Which plugins do I install?
+
+- **Building or training ML models against a Deriva catalog?** Install both. `deriva` provides the generic catalog surface; `deriva-ml` adds the DerivaML abstractions you'll work with day-to-day (Datasets, Workflows, Executions, Features, Assets).
+- **Curating datasets in a DerivaML catalog?** Install both. `deriva-ml`'s `dataset-lifecycle` skill is the main entry point; `deriva` covers the generic vocabulary and table operations the dataset workflow leans on.
+- **Evolving a Deriva catalog (new tables, columns, vocabularies, annotations) on a non-ML project?** Install just `deriva`. Add `deriva-ml` later if your project picks up ML work.
+- **Just exploring a Deriva catalog?** `deriva` alone is enough.
 
 ## Installation
 
-Add the marketplace once, then install whichever plugins you need:
+Add the marketplace once, then install the plugins you need:
 
 ```bash
 # Add the marketplace (one-time)
 /plugin marketplace add informatics-isi-edu/deriva-plugins
 
-# Install the tier-1 plugin (works on any Deriva catalog)
+# Install the deriva plugin (works on any Deriva catalog)
 /plugin install deriva
 
-# Optionally install the tier-2 DerivaML plugin
+# For DerivaML workflows, also install:
 /plugin install deriva-ml
 ```
 
-If you do DerivaML work, install both. If you only work with raw Deriva catalogs, the `deriva` plugin alone is sufficient.
+The two plugins are independent — they're released and versioned separately and live in separate repos; the marketplace just lists them in one place. Install only what you need.
 
 ## Updating
 
@@ -54,12 +61,12 @@ After someone runs `bump-version` in `deriva-skills` or `deriva-ml-skills`, this
 git pull
 
 # 3. Bump the right plugin's version pin:
-#    For deriva (tier-1):
+#    For the deriva plugin:
 jq '(.plugins[] | select(.name == "deriva") | .version) = "1.2.2"' \
   .claude-plugin/marketplace.json > /tmp/m.json && \
   mv /tmp/m.json .claude-plugin/marketplace.json
 
-#    For deriva-ml (tier-2):
+#    For the deriva-ml plugin:
 # jq '(.plugins[] | select(.name == "deriva-ml") | .version) = "1.3.2"' \
 #   .claude-plugin/marketplace.json > /tmp/m.json && \
 #   mv /tmp/m.json .claude-plugin/marketplace.json
