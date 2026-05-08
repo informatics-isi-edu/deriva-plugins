@@ -1,0 +1,34 @@
+{
+  "name": "deriva-plugins",
+  "owner": {
+    "name": "ISI Informatics",
+    "email": "isrd@isi.edu"
+  },
+  "description": "Claude Code plugins for the Deriva ecosystem — tier-1 core catalog skills (`deriva`) and tier-2 DerivaML ML-workflow skills (`deriva-ml`).",
+  "plugins": [
+    {
+      "name": "deriva",
+      "source": {
+        "source": "github",
+        "repo": "informatics-isi-edu/deriva-skills"
+      },
+      "version": "1.2.1",
+      "description": "Tier-1 skills for working with Deriva catalogs via deriva-mcp-core — schema operations, table/column creation, vocabulary management, query patterns, Chaise display customization, and generic catalog troubleshooting.",
+      "author": {
+        "name": "ISI Informatics"
+      }
+    },
+    {
+      "name": "deriva-ml",
+      "source": {
+        "source": "github",
+        "repo": "informatics-isi-edu/deriva-ml-skills"
+      },
+      "version": "1.3.1",
+      "description": "Tier-2 skills for DerivaML ML workflows — dataset lifecycle, executions, features, experiments, asset management, and Hydra-zen configs. Depends on the `deriva` plugin and the deriva-ml-mcp MCP plugin.",
+      "author": {
+        "name": "ISI Informatics"
+      }
+    }
+  ]
+}
