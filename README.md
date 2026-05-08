@@ -50,7 +50,7 @@ Skill discovery is automatic: Claude Code clones each plugin repo and walks its 
 
 ### Bumping the version pin after a plugin release
 
-After someone runs `bump-version` in `deriva-skills` or `deriva-ml-skills`, this marketplace's pin must be updated **by hand** for users to see the new release. (Automation deferred — see "Future improvement" below.)
+After someone runs `bump-version` in `deriva-skills` or `deriva-ml-skills`, this marketplace must be updated **by hand** for users to see the new release. The update has two pieces: the **version pin** in `marketplace.json` (which determines what `autoUpdate` users get), and a **`{plugin-name}--v{version}` tag** on this repo (which is what Claude Code's `dependencies` resolver scans).
 
 ```bash
 # 1. Note the new version from the plugin's GitHub Releases page,
@@ -75,19 +75,35 @@ jq '(.plugins[] | select(.name == "deriva") | .version) = "1.2.2"' \
 #    change should be exactly one line).
 git diff .claude-plugin/marketplace.json
 
-# 5. Commit and push:
+# 5. Commit:
 git add .claude-plugin/marketplace.json
 git commit -m "Bump deriva to 1.2.2"
-git push
+
+# 6. Tag this commit with the {plugin-name}--v{version} convention.
+#    This is what Claude Code's `dependencies` resolver looks for —
+#    NOT the v1.2.2 tag in the plugin source repo. Without this tag,
+#    any plugin declaring `dependencies: [{name: "deriva", version: "..."}]`
+#    fails to install with `no-matching-tag`.
+git tag deriva--v1.2.2
+# Or for deriva-ml:
+# git tag deriva-ml--v1.3.2
+
+# 7. Push commit and tag together:
+git push --follow-tags
 ```
 
-**Failure mode if skipped:** users on `autoUpdate: true` stay on whatever version the pin still points to. There is no error or warning — the install just delivers the old version. The plugin repo's GitHub Release will exist but no user reaches it through this marketplace.
+**Failure modes:**
+
+- **Skip the version-pin bump:** users on `autoUpdate: true` stay on whatever version the pin still points to. The plugin repo's GitHub Release exists but no user reaches it through this marketplace. No error.
+- **Skip the prefixed tag:** any plugin with a `dependencies:` entry referencing this plugin fails to install with `no-matching-tag` until the tag is created. Surfaces as an error in `/plugin list`, `/doctor`, and the install output.
+
+**Why both:** the version pin is what controls *which version a user gets when they install this plugin*. The prefixed tag is what controls *which version another plugin's `dependencies` declaration resolves to*. They serve different resolution paths and need to be updated together; otherwise something breaks somewhere.
 
 **Mirroring docs:** the same procedure (with the corresponding plugin name) appears in each plugin repo's `CLAUDE.md` under "Bumping the meta-marketplace." When updating the workflow here, also update the plugin-side docs.
 
 ### Future improvement (deferred)
 
-Each plugin repo could carry a GitHub Actions workflow that fires on `v*.*.*` tag push and opens a PR against this repo with the version-pin update. Auth would be a fine-grained PAT (or GitHub App) with `Contents: write` + `Pull requests: write` on `deriva-plugins`. Closes the only real drift gap. Not implemented yet — the manual procedure above is the current state.
+Each plugin repo could carry a GitHub Actions workflow that fires on `v*.*.*` tag push and opens a PR against this repo with the version-pin update + the prefixed tag. Auth would be a fine-grained PAT (or GitHub App) with `Contents: write` + `Pull requests: write` on `deriva-plugins`. Closes the drift gap entirely. Not implemented yet — the manual procedure above is the current state.
 
 ## Related Projects
 
