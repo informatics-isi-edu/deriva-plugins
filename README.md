@@ -35,7 +35,9 @@ Each plugin is independently versioned and released from its own repo:
 - [`deriva-skills`](https://github.com/informatics-isi-edu/deriva-skills) — releases `deriva` plugin, tagged `v*.*.*`
 - [`deriva-ml-skills`](https://github.com/informatics-isi-edu/deriva-ml-skills) — releases `deriva-ml` plugin, tagged `v*.*.*`
 
-After a plugin release, the corresponding `version` field in [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json) is bumped to match. The plugin repos still ship their own per-repo `marketplace.json` for users who want a single-plugin install path; this meta-marketplace is the recommended entry point for users who want both.
+After a plugin release, the corresponding `version` field in [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json) must be bumped manually to match the new tag (this step is not automated yet). The plugin repos themselves no longer carry a per-repo `marketplace.json` — this is the only marketplace for both plugins.
+
+Skill discovery happens automatically: Claude Code clones each plugin repo and walks its `skills/*/SKILL.md` files; the marketplace doesn't enumerate skills.
 
 ## Related Projects
 
