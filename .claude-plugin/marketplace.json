@@ -24,7 +24,7 @@
         "source": "github",
         "repo": "informatics-isi-edu/deriva-ml-skills"
       },
-      "version": "1.4.12",
+      "version": "1.4.13",
       "description": "Tier-2 skills for DerivaML ML workflows — dataset lifecycle, executions, features, experiments, asset management, and Hydra-zen configs. Depends on the `deriva` plugin and the deriva-ml-mcp MCP plugin.",
       "author": {
         "name": "ISI Informatics"
