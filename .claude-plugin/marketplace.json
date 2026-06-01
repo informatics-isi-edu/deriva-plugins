@@ -12,7 +12,7 @@
         "source": "github",
         "repo": "informatics-isi-edu/deriva-skills"
       },
-      "version": "1.2.3",
+      "version": "1.2.4",
       "description": "Tier-1 skills for working with Deriva catalogs via deriva-mcp-core — schema operations, table/column creation, vocabulary management, query patterns, Chaise display customization, and generic catalog troubleshooting.",
       "author": {
         "name": "ISI Informatics"
